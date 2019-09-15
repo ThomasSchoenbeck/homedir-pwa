@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Item } from 'src/app/models/item';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,17 +11,20 @@ import { AngularFireAuth } from '@angular/fire/auth';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-  items: Observable<Item[]> = null;
+  // items: Observable<Item[]> = null;
+  items: Item[] = null;
   private userId: string;
+  sub: Subscription;
+  collectionRef: any;
 
   constructor(private db: AngularFirestore, private afAuth: AngularFireAuth) {
 
     this.afAuth.authState.subscribe( user => {
       if (user) {
         this.userId = user.uid;
-        this.getItemsList();
+        // this.getItemsList();
       }
     });
 
@@ -29,12 +32,24 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadData();
   }
 
-  getItemsList() {
-    if (!this.userId) { return; }
-    this.items = this.db.collection<Item>('items', ref => ref.where('user', '==', this.userId).orderBy('createdAt') ).valueChanges();
+  loadData() {
+    console.log(`running loadData()`);
+    this.collectionRef = this.db.collection<Item>('items', ref => ref.where('user', '==', this.userId).orderBy('createdAt') );
+    // this.sub = this.collectionRef.valueChanges().subscribe( data => {
+    this.sub = this.collectionRef.valueChanges().subscribe( data => {
+      console.log(data);
+      this.items = data;
+    });
+
   }
+
+  // getItemsList() {
+  //   if (!this.userId) { return; }
+  //   this.items = this.db.collection<Item>('items', ref => ref.where('user', '==', this.userId).orderBy('createdAt') ).valueChanges();
+  // }
 
   addItem(e) {
     console.log(`running addItem(${e.value})`);
@@ -47,9 +62,17 @@ export class ListComponent implements OnInit {
 
   }
 
-  deleteOne(index: number) {
-    console.log(`running deleteOne(${index})`);
-    this.items.pipe(map( itemList => itemList.splice(index, 1)));
+  deleteOne(row: any, i: number) {
+    console.log(`running deleteOne()`);
+    console.log(row.payload);
+    console.log(row.payload.doc);
+    const doc = this.collectionRef.doc(row);
+    console.log(doc);
+    // data.delete();
+    // this.items.subscribe( data => console.log(data));
+    // console.log(this.items);
+    // console.log(data);
+    // console.log(data.payload.doc.id);
   }
 
   toggleChecked(e: HTMLElement, i: number) {
@@ -62,6 +85,10 @@ export class ListComponent implements OnInit {
 
     this.items[i].checked = !this.items[i].checked;
     console.log(`we are checked ${this.items[i].checked}`);
+  }
+
+  ngOnDestroy() {
+    if (this.sub) { this.sub.unsubscribe(); }
   }
 
 }

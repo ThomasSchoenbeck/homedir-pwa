@@ -7,10 +7,15 @@
     </div>
   </div>
   <div class="tbody">
-    <div class="tr" *ngFor="let row of items | async; let i = index">
+    <!-- <div class="tr" *ngFor="let row of items | async; let i = index">
       <div class="td"><input type="checkbox" (click)="toggleChecked($event.target, i)" [checked]="row.checked"></div>
       <div class="td"><input type="text" [value]="row.name"></div>
-      <div class="td"><button (click)="deleteOne(i)">D</button></div>
+      <div class="td"><button (click)="deleteOne(row, i)">D</button></div>
+    </div> -->
+    <div class="tr" *ngFor="let row of items; let i = index">
+      <div class="td"><input type="checkbox" (click)="toggleChecked($event.target, i)" [checked]="row.checked"></div>
+      <div class="td"><input type="text" [value]="row.name"></div>
+      <div class="td"><button (click)="deleteOne(row, i)">D</button></div>
     </div>
     <div class="tr">
       <div class="td"><input type="checkbox"></div>
