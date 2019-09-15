@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 import { Item } from 'src/app/models/item';
-import { AuthService } from 'src/app/services/auth.service';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
@@ -39,7 +39,7 @@ export class ListComponent implements OnInit, OnDestroy {
     console.log(`running loadData()`);
     this.collectionRef = this.db.collection<Item>('items', ref => ref.where('user', '==', this.userId).orderBy('createdAt') );
     // this.sub = this.collectionRef.valueChanges().subscribe( data => {
-    this.sub = this.collectionRef.valueChanges().subscribe( data => {
+    this.sub = this.collectionRef.valueChanges({ idField: '_id' }).subscribe( data => {
       console.log(data);
       this.items = data;
     });
@@ -64,10 +64,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
   deleteOne(row: any, i: number) {
     console.log(`running deleteOne()`);
-    console.log(row.payload);
-    console.log(row.payload.doc);
-    const doc = this.collectionRef.doc(row);
-    console.log(doc);
+    console.log(row);
+    this.collectionRef.doc(row._id).delete();
+    // console.log(row.getId());
+    // console.log(row.payload);
+    // console.log(row.payload.doc);
+    // console.log(doc);
     // data.delete();
     // this.items.subscribe( data => console.log(data));
     // console.log(this.items);

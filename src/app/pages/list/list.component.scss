@@ -5,11 +5,13 @@
     width: 100%;
 
     &.checked .td > input { background: blue; color: white; }
+    &.disabled .td > input { background: lightgray; color: darkgray; }
+    &.disabled .td > button { background: lightgray; color: darkgray; }
   }
   .th, .td {
 
     &:nth-child(1) { width: 40px; }
-    &:nth-child(2) { width: calc(100vw - 80px) ; }
+    &:nth-child(2) { width: calc(100vw - 100px) ; }
     &:nth-child(3) { width: 40px; }
 
 
