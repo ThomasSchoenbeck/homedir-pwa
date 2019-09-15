@@ -1,0 +1,23 @@
+
+$height: 45px;
+
+#offlineNotification{
+  // background-color: #ee8f00
+  background-color: #152f74;
+  color: white;
+  height: $height;
+  line-height: $height;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+main {
+  position: relative;
+  text-align: center;
+  overflow-y: scroll;
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+}

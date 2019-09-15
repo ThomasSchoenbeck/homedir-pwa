@@ -1,0 +1,24 @@
+<div class="table">
+  <div class="thead">
+    <div class="tr">
+      <div class="th">Sel.</div>
+      <div class="th">Item</div>
+      <div class="th">Del</div>
+    </div>
+  </div>
+  <div class="tbody">
+    <div class="tr" *ngFor="let row of items | async; let i = index">
+      <div class="td"><input type="checkbox" (click)="toggleChecked($event.target, i)" [checked]="row.checked"></div>
+      <div class="td"><input type="text" [value]="row.name"></div>
+      <div class="td"><button (click)="deleteOne(i)">D</button></div>
+    </div>
+    <div class="tr">
+      <div class="td"><input type="checkbox"></div>
+      <div class="td"><input type="text" (keyup.enter)="addItem($event.target)"></div>
+      <div class="td"><button>D</button></div>
+    </div>
+    <!-- <div class="tr">
+      <button (click)="addOne()">another one</button>
+    </div> -->
+  </div>
+</div>
